@@ -95,9 +95,11 @@ Pc = MIParray[0][:]
 Snw=MIParray[1][:]
 Sw = MIParray[2][:]
 
-#MIPplot=inv.plot_drainage_curve()
-#plt.show()
 
+T_number_N =len(pn["throat.all"])
+T_inv_N=np.arange(1,T_number_N+1,1)
+P_number_N = len(pn["pore.all"])
+P_inv_N=np.arange(1,P_number_N+1,1)
 ## calculate K_relative for increasing pressure
 K_rel_array=[]
 for item in Pc:
@@ -122,7 +124,18 @@ for item in Pc:
     Q_full = Nphase_flow.rate(pores=pn.pores('outlets'))
     K_rel = Q_partial/Q_full
     K_rel_array.extend(K_rel)
+
+    T_inv_N=np.vstack([T_inv_N,~Ti])
+    P_inv_N=np.vstack([P_inv_N,~Pi])
+np.savetxt('T_inv_N.txt', T_inv_N.transpose(),fmt="%5i")
+np.savetxt('p_inv_N.txt', P_inv_N.transpose(),fmt="%5i")
+
 ###################################################################
+T_number_W =len(pn["throat.all"])
+T_inv_W=np.arange(1,T_number_W+1,1)
+P_number_W = len(pn["pore.all"])
+P_inv_W=np.arange(1,P_number_W+1,1)
+
 
 K_rel_array1=[]
 for item in Pc:
@@ -142,6 +155,11 @@ for item in Pc:
     K_rel = Q_partial/Q_full
     K_rel_array1.extend(K_rel)
 
+    T_inv_W=np.vstack([T_inv_W,Ti])
+    P_inv_W=np.vstack([P_inv_W,Pi])
+np.savetxt('T_inv_W.txt', T_inv_W.transpose(),fmt="%5i")
+np.savetxt('p_inv_W.txt', P_inv_W.transpose(),fmt="%5i")
+
 
 
 
@@ -156,7 +174,7 @@ plt.ylabel('Relative K', fontsize=20)
 plt.savefig('plot-pc.png')
 plt.show()
 """
-
+"""
 book = xlwt.Workbook(encoding="utf-8")
 
 sheet1 = book.add_sheet(extracted_network)
@@ -189,7 +207,7 @@ for n in K_rel_array1:
 
 
 book.save("both_throat_pore.xls")
-"""
+
 
 rb = open_workbook('bentheimer-3.18.xls',formatting_info=True)
 rs = rb.sheet_by_index(0)
